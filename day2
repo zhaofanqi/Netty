@@ -1,0 +1,70 @@
+v5:
+  BIO 就是传统的java io 
+  BIO 的同步阻塞缺点可以通过线程池机制改善，实现多个客户连接服务器
+  BIO编程的简单流程：
+        1 服务器端启动ServerSocket
+        2 客户端启动Socket对服务器进行通讯，默认情况下服务器端需要对每个客户建立一个线程进行通讯
+        3 客户端发送请求后，先咨询服务器是否有线程响应，如果没有则会等待或者被拒绝
+        4 如果有响应，客户端线程会等待请求结束后，再继续执行
+        （3，4则体现了 阻塞）
+ v6:案例代码，详见code Netty\src\BIO\Demo\day2\BIOServer.java
+ /**
+ * @description:
+ * 使用BIO模型编写一个服务器端，监听6666端口，当有客户端连接时，就启动一个线程通信；
+ * 要求使用线程池机制改善，可以连接多个客户端
+ * 服务器端可以接受服务端发送的数据(telnet方式即可)
+ * @author:zhaofanqi
+ * @create:2020/2/27 17:04
+ **/
+public class BIOServer {
+    public static void main(String[] args) throws IOException {
+        //BIO的步骤
+        // 1 创建服务端的ServerSocket、
+        ServerSocket serverSocket = new ServerSocket(6666);
+
+        // 2 获取客户端Socket与应用进行通信
+        System.out.println("server had started ,waiting client");
+       final  Socket socket = serverSocket.accept();// 一点获取到了，即与客户端取得连接
+        System.out.println("get connect to client");
+        // 3 启动一个线程，采用线程池的方式
+        ExecutorService threadPool = Executors.newCachedThreadPool();// 查看源码定义这就是创建一个线程池，不足创建，多了回收
+        threadPool.execute(new Runnable() {// 线程池调用execute 创建一个线程，而创建线程的方式就这么几种，别怕
+            @Override
+            public void run() {
+                //单独创建一个handler()方法来处理逻辑
+                handler(socket);//传入socket是为了 实现与客户端通信
+            }
+        });
+
+
+    }
+
+    private static void handler(Socket socket)  {
+        try {
+            InputStream inputStream = socket.getInputStream();
+        //    OutputStream outputStream = socket.getOutputStream();
+
+            byte[] bytes = new byte[1024];
+
+            while (true){
+                int read=inputStream.read(bytes);
+                if (read!=-1){// 说明没有读完，同时读取的数据存入了bytes中
+                    System.out.println("what i have read in :" + new String(bytes, 0, read));
+   //                 outputStream.write(0);
+                }else {
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+}
+ v7：只是总结
