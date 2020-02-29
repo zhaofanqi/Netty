@@ -1,0 +1,10 @@
+v12:
+ 通道(channel)
+    通道可读可写；
+    通道可以实现异步读写数据
+    通道可以从缓冲区读数据，也可以写数据到缓冲区
+ 常用的channel类：FileChannel :用于文件的数据读写
+                  DatagramChannel ：用于UDP的数据读写
+                  ServerSocketChannel：用于TCP的数据读写(类似于ServerSocket)
+                  SocketChannel:用于TCP的数据读写(类似于Socket)
+ 
