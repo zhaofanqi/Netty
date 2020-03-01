@@ -8,3 +8,21 @@ v12:
                   ServerSocketChannel：用于TCP的数据读写(类似于ServerSocket)
                   SocketChannel:用于TCP的数据读写(类似于Socket)
  
+当client请求连接server时，server的ServerSocketChannel 的实现类 ServerSocketChannelImpl会创建属于该client的channel 
+                                               即：ScoketChannel的实现类SocketChannelImpl
+ V13：
+    案例1：使用前面学习的ByteBuffer和FileChannel将 “hello,Netty！ I'm coming ”写入到文件FileChannelTest01.txt中
+ v14:   
+    案例2：使用前面学习的ByteBuffer和FileChannel将FileChannelTest01.txt中的数据读入到陈旭，并显示在控制台
+ v15:
+    案例3：使用一个Buffer完成文件的读取，使用FileChannel 和read() write()完成文件的拷贝
+    关键点：buffer.flip() ; buffer.clear(). 当position=limit 时，读取返回值为0！当channel.read(buffer)==-1表示读到最末尾了
+ v16:
+    案例4：拷贝照片使用transferFrom() 
+    注意点：可以直接跳过 buffer了！
+ V17:
+   Buffer 和 Channel 使用注意事项
+   1) Buffer 中存入多种类型数据时，取出时类型需要和存入的的类型、顺序相对应！ 否则报错： BufferUnderflowException
+   2) 可以将普通Buffer  转成只读 Buffer ：此处需要注意：buffer.asReadOnlyBuffer()得到的readBuffer ，不会保存 buffer中原来有的内容！
+   3) NIO 还提供了 MappedByteBuffer，可以将文件直接在内存（堆外的内存）中进行修改，而如何同步到文件由NIO 完成
+   4) NIO 还支持 通过多个Buffer(即Buffer数组) 完成读写操作，即 Scattering 和 Gatering
