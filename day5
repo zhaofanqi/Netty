@@ -2,6 +2,20 @@ v18:
     MappedByteBuffer 可让文件直接在内存(堆外内存)中修改，即操作系统不需要拷贝一次
     案例：使用 MappedByteBuffer 实现数据的修改 
     其中使用了： RandomAccessFile 
+     // RandomAccessFile 其实是可以 对指定文件可以进行读写操作选择，不需要像通常使用的BIO那样，指定输入流输出流
+     // RandomAccessFile 可以理解为是一个很大的Byte数组存储在文件系统中，操作的位置取决于 point（光标位置），而且读写时光标都会变动，
+                                     同时可以使用seek()调整光标的位置
+     // class RandomAccessFile implements DataOutput, DataInput, Closeable 
+                而 DataInput /DataOutput 是字节流下的一种特殊流，是java.io 的一种，而java.io 流对象包含了NIO 的Channel
+                
+     rw = new RandomAccessFile(new File("FileChannelTest01.txt"), "rw");
+     FileChannel rwChannel = rw.getChannel();
+     // 方法说明： Maps a region of this channel's file directly into memory：将channel 中的部分区域直接映射到内存中
+     // 参数说明： FileChannel.MapMode.READ_WRITE：表明数据可读可写
+     // position  0：从映射的开始位置
+     // size：10： 映射的长度
+     MappedByteBuffer map = rwChannel.map(FileChannel.MapMode.READ_WRITE, 0, 10);
+     
 v19:
     NIO支持通过多个Buffer(Buffer数组)完成读写操作， 即 Scattering 和 Gathering
      Scattering :将数据写入到Buffer时，可以采用Buffer 数组，依次写入[分散]
