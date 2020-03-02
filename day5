@@ -1,0 +1,21 @@
+v18:
+    MappedByteBuffer 可让文件直接在内存(堆外内存)中修改，即操作系统不需要拷贝一次
+    案例：使用 MappedByteBuffer 实现数据的修改 
+    其中使用了： RandomAccessFile 
+v19:
+    NIO支持通过多个Buffer(Buffer数组)完成读写操作， 即 Scattering 和 Gathering
+     Scattering :将数据写入到Buffer时，可以采用Buffer 数组，依次写入[分散]
+     Gathering ：从Buffer 读取数据时，可以采用 Buffer 数组，依次读
+    案例： 使用ServerSocketChannel 和 SocketChannel 将读取的数据显示在控制台
+    实际编写的案例，如果先关闭的客户端，服务端会不断打日志，因为是while true ，后期可能会有改良
+    实际上，服务器从channel 读取数据时，也会有多个Buffer 的 
+    
+    背景知识补充：
+        ServerSocket  Socket 是一对 他们是 java.net 下实现Socket 通信的类
+        ServerSocketChannel   SocketChannel 是一对 他们是java.nio下面实现通信的类，支持异步通信
+        服务器必须先建立 ServerSocket 或者 ServerSocketChannel 来等待客户端的连接
+        客户端必须建立想对应的 Socket 或者 SocketChannel 来与服务器建立连接
+        服务器接收到客户端的连接请求后，再生成一个Socket 或者 SocketChannel 与此客户端通信
+       
+        不过 Socket 和SocketChannel  可以通过  socket.channel()  SocketChannel.socket() 方法相互转换
+        同理，ServerSocket 和 ServerSocketChannel 也可以相互转换
