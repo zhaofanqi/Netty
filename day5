@@ -33,3 +33,5 @@ v19:
        
         不过 Socket 和SocketChannel  可以通过  socket.channel()  SocketChannel.socket() 方法相互转换
         同理，ServerSocket 和 ServerSocketChannel 也可以相互转换
+v20：
+    整理学习的channel 的学习内容
