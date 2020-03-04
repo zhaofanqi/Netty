@@ -38,4 +38,11 @@ NIO　非阻塞 网络编程原理分析图
         读、写、请求建立连接，建立连接)，selector上可以注册多个 SocketChannel
     3) 注册后返回一个 SelectionKey，会和该 Selector 关联（集合）
     4）Selector 进行监听 select(),返回有事件发生的通道的个数
-    
+    5) 进一步得到各个SelectionKey（有事件发生的）
+    6）再通过SelectionKey 反向获取 SocketChannel,方法 channel()
+    7) 可以通过得到的channel ,完成业务处理
+ 流程：
+      建立请求，并完成注册:客户端请求建立连接，服务端产生SocketChannel, SocketChannel 前往Selector进行注册，并返回SelectionKey;
+      Selector 进行监听： Selector 进行监听，得到有事件发生的个数和具体的 SelectionKey 
+      得到Channel 完成业务处理 ：通过 SelectionKey 反向得到 Channel,完成业务
+      
