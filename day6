@@ -1,0 +1,35 @@
+V21:
+Selector(选择器)
+基本介绍
+    1）Java 的NIO ,是非阻塞的IO方式，可以用一个线程处理多个的客户端连接，就会使用到Selector
+    2)Selector 能够检测多个注册的通道 上是否有事件发生(注意：多个channel以事件的方式可以注册到同一个Selector上)，
+          如果有事件发生，便获取事件然后针对每个事件进行处理。这样就可以只用一个线程去管理多个通道，也就是管理多个连接和请求
+          （selector之所以可以管理多个，是因为通道注册到selector上。可以检测到是否有事件的发生，即selector一直循环检测）
+    3) 只有在连接真正有读写事件发生时，通道才会进行读写，就大大减少了系统的开销，并且不必为每个连接多创建一个线程，不用去维护多个线程
+    4) 避免了多线程之间的上下文切换导致的开销
+    
+ Selector 特点说明：
+    1) Netty 的IO 线程 NioEventLoop 聚合了Selector(选择器，也叫多路复用器) ，可以同时并发处理成百上千个客户端连接
+    2 当线程从某客户端Socket通道进行读写数据时，若没有数据可用时，该线程可以进行其他任务
+    3）线程通常将非阻塞IO的空闲时间用于在其他通道上执行IO操作，所以单个线程可以管理多个输入和输出
+    4）由于读写操作都是非阻塞的，这就可以充分提升IO线程的运行效率，避免由于频繁的IO阻塞导致的线程挂起
+          非阻塞/异步：底层都是用到了缓存
+    5）一个IO线程可以并发处理 N个客户端连接和读写操作，这从根本上解决了传统同步阻塞IO 一连接一线程的模式，架构的性能，
+        弹性伸缩能力和可靠性得到了极大提升
+V22:
+   Selector 是一个抽象类 ，常用方法有：
+   public static Selector open() ；// 得到一个选择器对象
+   public int select(long timeout):// 监控所有注册的通道，当其中有IO 操作可以进行时，将对应的SelectionKey 加入到内部集合中并返回，
+            参数用来设置超时时间。此处注意：SelectionKey 反向得到 Channel
+      还有2个对比的方法： select() ：线程阻塞，直达其中监测的通道有事件发生
+                        selectNow(): 查看当前是否有事件 ，没有的话直接返回
+                         从而可以对比出，select(long timeout)：查看当前通道是否有事件，并可以设置等待时间长度
+   public Set<SelectionKey> selectedKeys():// 从内部集合中得到所有的SelectionKey 
+            即 注册到selector上的所有selectionkey.上面的select(...) 得到的是有事件发生的channel 
+   
+   *** selector 是与Thread 关联的。 Selector.select() 得到 selectionKey 的集合，可以通过selectionKey 查看到底是哪些事件发生了如
+         {read,write, 连接}同时，可以通过SelectionKey 得到具体的 channel ，再进行操作
+   wakeup()://唤醒 selector
+   
+V23:
+NIO　非阻塞 网络编程原理分析图
