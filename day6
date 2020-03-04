@@ -33,3 +33,9 @@ V22:
    
 V23:
 NIO　非阻塞 网络编程原理分析图
+    1) 当客户端连接时，会通过 ServerSocketChannel 得到 SocketChannel,
+    2) 将 socketChannel 注册到 Selector 上，(使用方法register(Selector sel,int ops)，其中ops 存在四个值分别为：
+        读、写、请求建立连接，建立连接)，selector上可以注册多个 SocketChannel
+    3) 注册后返回一个 SelectionKey，会和该 Selector 关联（集合）
+    4）Selector 进行监听 select(),返回有事件发生的通道的个数
+    
