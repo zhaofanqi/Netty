@@ -1,3 +1,8 @@
 V24 
      案例：编写一个NIO入门案例，实现服务器端和客户端之间的数据简单通讯（非阻塞）
      目的： 理解NIO 非阻塞网络编程机制
+     ServerSocketChannel.socket().bind():
+          ServerSocketChannel.socket() 得到了 SocketChannel
+          ServerSocketChannel.socket().bind():就相当于SocketChannel.bind().
+      这样服务端得到客户端类型再绑定端口了，从而实现类型关联了
+      所有的客户端请求都会先到Selector,同时服务端也需要注册到Selector上
