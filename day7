@@ -6,3 +6,10 @@ V24
           ServerSocketChannel.socket().bind():就相当于SocketChannel.bind().
       这样服务端得到客户端类型再绑定端口了，从而实现类型关联了
       所有的客户端请求都会先到Selector,同时服务端也需要注册到Selector上
+     既然是监听，服务器应该是一直启动，并且监听的seletor应该放到while(true)中进行工作，监听得到的selectionKeys,需要进行区别处理，看他是读还是
+     写 再编写代码进行区分处理。由于需要设置为非阻塞，所以在为请求连接的时候，需要设定为.configuration(false),如果是读类型，需要的buffer,
+     channel 是通过 selectionKey得到的
+V25:
+     编写案例客户端
+V26:
+     总结
