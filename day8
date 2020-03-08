@@ -1,0 +1,52 @@
+v27：
+    SelectionKey  表示 Selector 和网络通道(channel)的注册关系，共四种
+    int OP_READ ： 代表读 值为1
+    int OP_WRITE： 代表写 值为4
+    int OP_CONNECT ： 待料连接已经建立，值为8
+    int OP_ACCEPT :有新的网络连接可以 accept,值为16
+    
+    
+     public static final int OP_READ = 1 << 0;
+     public static final int OP_WRITE = 1 << 2;
+     public static final int OP_CONNECT = 1 << 3;
+     public static final int OP_ACCEPT = 1 << 4;
+     
+     selector() 得到与之相关联的对象
+     channel() 得到与之相关联的通道
+     attachment() 得到与之关联的共享数据 --buffer
+     isAcceptable() 是否可以 accept
+     isReadable() 是否可以 读
+     isWritable() 是否可以 写
+     interestOps(int ops) 可以改变监听的事件
+     
+    
+ V28:
+  ServerSocketChannel
+    1) ServerSocketChannel 在服务器端监听 新的客户端Socket连接
+    2） 相关方法如下：
+      open()// 得到ServerSocketChannel 通道
+      bind()// 设置服务器端端口号
+      configureBlocking(Boolean block)// 设置阻塞 或非阻塞模式， false 表示非阻塞模式
+      accept() // 接受一个连接，返回代表这个连接的通道对象 SocketChannel
+      register() 注册一个选择器并 设置监听的事件
+      
+   SocketChannel
+    1) SocketChannel,网络IO通道，具体负责进行读写操作。NIO把缓冲区的数据写入通道，或者把通道里的数据读到缓冲区
+    2） 相关方法如下
+      open()// 得到 SocketChannel 通道
+      connect()// 连接服务器
+      finishConnect() 如果connect 连接失败，则通过该方法完成连接操作
+      configureBlocking(Boolean block)// 设置阻塞 或非阻塞模式， false 表示非阻塞模式
+      register() 注册一个选择器并 设置监听的事件
+      close() //关闭通道
+      read(ByteBuffer dst) // 从通道里面读数据到buffer
+      write(ByteBuffer src) //从buffer 往通道里面写数据
+  V29:
+     案例： NIO网络编程应用实例-- 群聊系统
+     实例要求：
+              1)编写一个NIO 群聊系统，实现服务器端和客户端之间的数据简单通讯(非阻塞)
+              2) 实现多人群聊
+              3) 服务器端：可以监测 用户上线，离线，并实现消息转发功能
+              4) 客户端：通过 channel 可以无阻塞发送消息给其他所有用户，同时可以接受其他用户发送的消息(有服务器转发得到)
+              5) 目的：进一步理解NIO非阻塞网络编程机制
+  
