@@ -1,0 +1,40 @@
+V33:
+     NIO 与 零拷贝(零拷贝：从操作系统角度看，没有CPU 拷贝) 
+      1) 零拷贝是网络编程的关键，很多性能优化都离不开
+      2） 在 java 程序中，常见的零拷贝 有 mmap(内存映射) 和 sendFile。那么，他们在OS里，到底是怎么样设计
+          分析 mmap  sendFile 
+      3) NIO 如何实现 零拷贝
+      
+      传统IO 和网络编程的一段代码
+      File file= new File("fileName");
+      RandomAccessFile raf = new RandomAccessFile(file,"rw");
+      byte[] arr = new byte[(int) file.length()];
+      raf.read(arr);// 完成数据的读入 arr      
+      Socket socket = new ServerSocket(8080).accept()
+      socket.getOutputStream().write(arr);
+      数据从文件到网络传输经历的过程：经历4次拷贝，三次切换
+          Hard drive -- DMA--->kernel buffer --- CPU copy -->user buffer-- CPU copy--->socket buffer---DMA copy--->protocol engine
+          DMA:direct memory access 直接内存拷贝不使用CPU
+      针对存在的 4次拷贝，三次切换， mmap 进行了优化：变为3次拷贝，三次切换
+          1) mmap 通过内存映射，将文件映射到内核缓冲区，同时，用户空间可以共享内核空间的数据，这样在进行网络传输的时候，就可以减少内核空间到
+                    用户控件的拷贝次数。即流程为：
+                                 -----> user buffer
+                                |
+             Hard drive-- DMA-->Kernel buffer -- CPU copy--->socket buffer --DMA copy--> protocol engine    
+              
+        sendFile优化：linux2.1 的3次拷贝2次切换 --- >Linux 2.4  的 2次拷贝2次切换
+         Linux 2.1 版本提供了 sendFile 函数，其基本原理：数据不经过用户态，直接从内核缓冲区进入到 Socket buffer,由于和用户态完全无关，减少了
+                    一次上下文切换
+         Linux 2.4 版本中，做了部分修改，避免了从内核缓冲区拷贝到 Socket buffer 的操作，直接拷贝到 协议栈，从而再一次减少了数据拷贝
+                    (其实，还是存在一次 CPU拷贝，kernel buffer--> Socket Buffer ,但是拷贝的信息很少，譬如：length，offset，消耗低，可忽律)
+                    Hard drive --DMA-->Kernel buffer --DMA copy --->protocol engine
+     
+   V34:
+    NIO 零拷贝案例 ： 
+                    1) 统的IO 方法传递一个大文件
+                    2) 使用 NIO 零拷贝方式传递(transferTo) 一个大文件
+                    3) 查看2种传递方式耗时时间
+                    
+                    
+                    
+     
