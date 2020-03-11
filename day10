@@ -1,5 +1,7 @@
 v36: 
   原生NIO存在的问题
+   1) NIO 的类库 和API 繁杂，使用麻烦，需要熟练掌握Selector,ServerSocketChannel\SocketChannel,ByteBuffer等
+   2) 需要具备额外的技能：熟悉 Java多线程，因为NIO编程涉及到Reactor 
   Netty的优点
 V37:  
   Netty高性能架构设计
