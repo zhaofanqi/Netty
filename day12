@@ -1,0 +1,10 @@
+v42:
+  Netty 模型简单版本：
+    1） BossGroup线程维护Selector,只关注 Accept
+    2)  当接收到Accept事件，获取到对应的 SocketChannel ，并分装成 NIOSocketChannel 并注册到 Worker线程(事件循环)，并进行维护
+    3） 当 Worker 线程监听到Selector 中的通道发生自己感兴趣的事件后，就进行处理（handler完成），注意handler已经加入到通道了
+    
+
+V43:
+  
+    
