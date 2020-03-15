@@ -34,3 +34,13 @@ v44:
    编写案例的自定义handler
  V46:
     编写客户端
+ V47 
+    源码 debug : 
+      bossGroup  和 workerGroup 默认线程数 CPU核数*2，以及 bossGroup 轮询使用 workerGroup 中的线程
+    context  channel 
+     源码 debug  ： channel 和 pipeline
+ V48 
+    笔记整理。简单回顾
+   
+ V49 
+    整理
