@@ -6,5 +6,27 @@ v42:
     
 
 V43:
+  Netty 模型详细版本：
+    1）Netty抽象出2组线程池 BossGroup 专门负责接收客户端的连接，WorkerGroup专门负责网络读写
+    2）BossGroup 和 WorkerGroup 类型都是 NIOEventLoop
+    3）NIOEventLoopGroup 相当于一个事件循环组，这个组中含有多个事件循环，每一个事件循环是 NIOEventLoop
+    4）NIOEventLoop 表示 一个不断循环的执行处理任务的线程，每个NIOEventLoop 都有一个Selector,用于监听绑定在其上的 socket 的网络通讯
+    5）NIOEventLoopGroup 可以有多个线程
+    6）每个 Boos NIOEventLoop 循环执行的步骤有：
+        轮询accept
+        处理 accept 事件，与client建立连接，生产 NIOSocketChannel ，并将 NIOSocketChannel 注册到某个 worker 的 NIOEventLoop上的selector
+        处理任务队列的任务 即 runAllTasks
+    7） 每个 Worker NIOEventLoop循环执行的步骤
+        轮询 read/write 事件
+        处理i/o事件，即 read,write 事件，在对应的 NIOSocketChannel处理
+        处理任务队列的任务 即 runAllTasks
+    8） 每个 Worker NIOEventLoop 处理业务时，会使用 pipeline(管道),pipeline中包含了 channel ,
+                          即通过pipeline 可以获取到对应的通道，同时管道中维护了很多的处理器
+
+v44:
+  Netty 快速入门实例--tcp服务
+  1）实例要求： 使用idea创建 Netty 项目
+  2）Netty服务器在6668端口监听，客户端能发送消息给服务器 “Hello ,服务器”
+  3） 服务器可以回复消息给客户端“hello，客户端”
+  4）目的： 对Netty 线程模型 有一个初步认识，便于理解 Netty模型理论
   
-    
