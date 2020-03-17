@@ -19,3 +19,22 @@ V51 :
    3) 调用者并不能立刻获得结果，而是通过 Future-Listener机制，用户可以方便的主动获取或者通过通知机制获得 io操作结果
    4） Netty 的异步模型是建立在 future 和 callback 的之上的。callback就是回调。重点说Future，他的核心思想是：假设一个方法 fun,计算过程可能非
     常耗时，等待fun返回显然不合适。可以在调用fun的时候，立马返回一个Future，后续可以通过Future去监控方法fun的处理过程（Future-Listener机制）
+  Future 说明：
+    1） 表示异步的执行结果，可以通过她提供的方法来检测执行是否完成，比如检索计算
+    2） ChannelFuture是一个接口public interface ChannelFuture extends Future<Void> ，我们可以添加监听器，当监听的事件发生时，就会通知监听器
+    工作原理示意图说明：（读取数据-->数据处理->数据传输->数据处理->显示数据，每个环节都对应一个handler）
+        1） 在使用netty进行编程时，拦截操作和转换出入站数据只乣提供 callback 或利用future即可。这使得 链式操作简单，高效并有利于编写代码
+        2）Netty 框架的目的就是让你的业务逻辑从网络基础应用编码中分离出来、解脱出来
+   
+  V52:
+     Future-Listener 机制
+     1） 当 Future对象刚刚创建时，处于非完成状态，调用者可以通过返回的 ChannelFuture 来获取操作执行的状态，注册监听函数执行完成后的操作
+     2） 常见有如下操作：
+         isDone() 当前操作是否完成；
+         isSuccess() 已完成的当前操作是否成功
+         getCause() 已完成的当前操作是失败的原因
+         isCancelled() 已完成的当前操作是否被取消
+         addListener() 注册监听器，当操作已完成（isDone()返回已完成），将会通知指定的监听器；如果Future对象已完成，则通知指定的监听器
+         
+  V53:
+    快速入门 http实例
